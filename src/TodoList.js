@@ -1,41 +1,22 @@
 import React from 'react';
 import TodoListItem from './TodoListItem';
-const todoList = [
-    {
-        id: 1,
-        title: "Complete assignment list"
-    },
-    {
-        id: 2,
-        title: "Complete assignment map"
-    },
-    {
-        id: 3,
-        title: "Complete assignment objects"
-    }
-];
 
-function TodoList() {
+
+
+
+const TodoList = ({ todoList }) => {
     return (
         <div>
             <ul>
-                {
-                    todoList.map(function (todo) {
-                        return <TodoListItem key={todo.id} title={todo.title}></TodoListItem>
-                    })
-                }
+
+                {todoList.map((obj) => (
+                    < TodoListItem obj={obj} key={obj.id} />
+                ))}
+
             </ul>
-        </div>
+        </div >
     );
-    // const listItems = todoList.map((item) =>
-    //     <li key={item["id"]}>
-    //         {item["title"]}
-    //     </li >
-    // );
 
-    // return (
-    //     <ul>{listItems}</ul>
-    // );
 
-}
+};
 export default TodoList;
