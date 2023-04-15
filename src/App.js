@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TodoList from './TodoList';
 import AddTodoForm from './AddTodoForm';
 
 function App() {
-  const [newTodo, setNewTodo] = React.useState('');
+
+  const [todoList, setTodoList] = useState([]);
+
+  function addTodo(newTodo) {
+    setTodoList([...todoList, newTodo])
+  }
   return (
     <div style={{ textAlign: 'left' }}>
       <header>
@@ -11,9 +16,10 @@ function App() {
           <h1>Todo List</h1>
           <hr />
         </div>
-        <TodoList></TodoList>
-        <AddTodoForm onAddTodo={setNewTodo}></AddTodoForm>
-        <p> {newTodo} </p>
+
+        <AddTodoForm onAddTodo={addTodo}></AddTodoForm>
+        <TodoList todoList={todoList}></TodoList>
+
       </header>
     </div>
   );
