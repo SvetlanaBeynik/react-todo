@@ -6,17 +6,44 @@ import AddTodoForm from './AddTodoForm';
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const fetchData = async () => {
+    console.log(process.env.REACT_APP_AIRTABLE_API_KEY)
+    const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`;
 
-  React.useEffect(() => {
-    new Promise((resolve, reject) =>
-      setTimeout(() => resolve({
-        data: { todoList: JSON.parse(localStorage.getItem('savedTodoList')) }
-      }), 2000)
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+      },
+    };
+    try {
+      const response = await fetch(url, options);
 
-    ).then((result) => {
-      setTodoList(result.data.todoList);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+
+      const todos = data.records.map((todo) => {
+        return {
+          id: todo.id,
+          title: todo.fields.title
+        };
+      });
+      setTodoList(todos);
       setIsLoading(false);
-    });
+
+    } catch (error) {
+      console.log(error.message);
+
+    };
+  }
+
+  useEffect(() => {
+    fetchData();
+
   }, []);
 
   useEffect(() => {
@@ -56,12 +83,7 @@ function App() {
 
   );
 
+
 };
 
 export default App;
-
-
-
-
-
-
