@@ -67,10 +67,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route
-          exact
-          path="/new"
-          element={
-
+          path="/" element={
             <header>
               <div style={{
                 // textAlign: 'left',
@@ -87,13 +84,52 @@ function App() {
               )}
             </header>
           }
-        ></Route>
+        />
+        <Route path="/new" element={<h1>New Todo List</h1>} />
       </Routes>
     </BrowserRouter>
-
   );
+}
 
+//   <header>
+//     <div style={{
+//       // textAlign: 'left',
+//       textAlign: 'center'
+//     }}>
+//       <h1>New Todo List</h1>
+//       <hr />
+//     </div>
+//     <AddTodoForm onAddTodo={addTodo}></AddTodoForm>
+//     {isLoading ? (
+//       <p>Loading...</p>
+//     ) : (
+//       <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+//     )}
+//   </header>
+// }
 
-};
 
 export default App;
+
+/* <Route
+exact
+path="/new"
+element={
+
+<header>
+  <div style={{
+    // textAlign: 'left',
+    textAlign: 'center'
+  }}>
+    <h1>New Todo List</h1>
+    <hr />
+  </div>
+  <AddTodoForm onAddTodo={addTodo}></AddTodoForm>
+  {isLoading ? (
+    <p>Loading...</p>
+  ) : (
+    <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+  )}
+</header>
+}
+></Route> */
