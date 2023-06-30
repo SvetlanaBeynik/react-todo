@@ -1,5 +1,6 @@
 import React from 'react';
 import InputWithLabel from './InputWithLabel';
+import PropTypes from 'prop-types';
 
 function AddTodoForm({ onAddTodo }) {
     // function InputWithLabel({ onAddTodo }) {
@@ -8,6 +9,10 @@ function AddTodoForm({ onAddTodo }) {
         const newTodoTitle = event.target.value;
         setTodoTitle(newTodoTitle);
     }
+
+    // AddTodoForm.propTypes = {
+    //     onAddTodo: PropTypes.func,
+    // };
 
     function handleAddTodo(event) {
         event.preventDefault();
@@ -37,6 +42,9 @@ function AddTodoForm({ onAddTodo }) {
 
 };
 
+AddTodoForm.propTypes = {
+    onAddTodo: PropTypes.func,
+};
 
 
 export default AddTodoForm;
