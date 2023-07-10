@@ -4,7 +4,7 @@ import TodoList from './TodoList';
 import AddTodoForm from './AddTodoForm';
 import propTypes from 'prop-types';
 // import { ReactComponent as Sort } from '../img/arrow-sort-24-filled.svg';
-
+import style from './TodoListItem.module.css';
 
 function TodoContainer({ tableName, baseName, apiKey }) {
     const [todoList, setTodoList] = useState([]);
@@ -89,13 +89,117 @@ function TodoContainer({ tableName, baseName, apiKey }) {
             localStorage.setItem("savedTodoList", JSON.stringify(todoList));
     }, [todoList]);
 
-    function addTodo(newTodo) {
-        setTodoList([...todoList, newTodo])
+    const addTodo = async (title) => {
+        const postTitle = {
+            fields: {
+                title: title,
+            },
+        };
+        const url = `https://api.airtable.com/v0/${baseName}/${tableName}`
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify(postTitle),
+        };
+        try {
+            const response = await fetch(url, options);
+            console.log(response)
+            if (!response.ok) {
+                const message = `Error has ocurred:
+                                   ${response.status} `;
+                throw new Error(message);
+            }
+            fetchData()
+        } catch (error) {
+            console.log(error.message);
+            return null;
+        }
     };
 
-    const removeTodo = (id) => {
-        const newTodoList = todoList.filter((todo) => todo.id !== id);
-        setTodoList(newTodoList);
+    // const addTodo = async (title) => {
+    //     const postTitle = {
+    //         fields: {
+    //             title: title,
+    //         },
+    //     };
+    //     // const url = `https://api.airtable.com/v0/${baseName}/${tableName}?sort[0][field]=title&sort[0][direction]=${sortDirection}`;
+    //     const url = `https://api.airtable.com/v0/${baseName}/${tableName}`
+    //     const options = {
+
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${apiKey}`,
+    //         },
+    //         body: JSON.stringify(postTitle),
+    //     };
+    //     try {
+
+
+    //         const response = await fetch(url, options);
+    //         console.log(response)
+
+
+    //         if (!response.ok) {
+    //             const message = `Error has ocurred:
+    //                                ${response.status} `;
+    //             throw new Error(message);
+    //         }
+
+    //         const todo = await response.json();
+    //         console.log(todo)
+    //         const newTodo = {
+    //             id: todo.id,
+    //             title: todo.fields.title,
+    //         };
+    //         setTodoList([...todoList, newTodo])
+    //         setSortDirection(sortDirection)
+    //         console.log(sortDirection)
+    //     } catch (error) {
+    //         console.log(error.message);
+    //         return null;
+    //     }
+    // };
+
+
+    const removeTodo = async (id) => {
+
+        const url = `https://api.airtable.com/v0/${baseName}/${tableName}/${id}`
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            },
+        };
+        try {
+            const response = await fetch(url, options);
+            console.log(response)
+
+
+            if (!response.ok) {
+                const message = `Error has ocurred:
+                                   ${response.status} `;
+                throw new Error(message);
+            }
+            const newTodoList = todoList.filter((todo) => todo.id !== id);
+            setTodoList(newTodoList);
+
+            // const todo = await response.json();
+            // console.log(todo)
+            // const newTodo = {
+            //     id: todo.id,
+            //     title: todo.fields.title,
+            // };
+            // setTodoList([...todoList, newTodo])
+            // return dataResponse;
+        } catch (error) {
+            console.log(error.message);
+            return null;
+        }
     };
     const toggleSortDirection = () => {
         setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -103,31 +207,43 @@ function TodoContainer({ tableName, baseName, apiKey }) {
 
     return (
         <>
-            <h1>{tableName}</h1>
-            <button onClick={toggleSortDirection}>
-                {/* <span style={{ display: 'none' }}></span> */}
-                Sort: {sortDirection === 'asc' ? 'Ascending' : 'Descending'}
-                {/* <Sort /> */}
-            </button>
-            <hr />
+            <div className={style.container}>
+                <div style={{
+                    // textAlign: 'left',
+                    textAlign: 'center'
+                }}>
+                    <h1>{tableName}</h1>
+                    {/* <h1>New Todo List</h1> */}
+                    {/* <hr /> */}
 
+                </div>
 
-            <div style={{
-                // textAlign: 'left',
-                textAlign: 'center'
-            }}>
-                <h1>New Todo List</h1>
-                <hr />
+                <div className={style.sorting}>
+                    {/* <h2>Sorting by A-to-Z</h2> */}
+                    <button onClick={toggleSortDirection}>
+                        {/* <span style={{ display: 'none' }}></span> */}
+                        Sort: {sortDirection === 'asc' ? 'Ascending' : 'Descending'}
+                        {/* <Sort /> */}
+                    </button>
 
-            </div>
-            <AddTodoForm onAddTodo={addTodo}></AddTodoForm>
-            {isLoading ? (
-                <p>Loading...</p>
-            ) : (
-                <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
-            )}
+                </div>
+                {/* <hr /> */}
+                <div className={style.todoListItemContainerWithInput}>
+                    <div className={style.todoInput}>
+                        <AddTodoForm onAddTodo={addTodo}></AddTodoForm>
+                    </div>
 
-            {/* <label className="switch" htmlFor="switch">
+                    {isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <div className={style.todoList}>
+                            <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+                        </div>
+
+                    )}
+                </div>
+
+                {/* <label className="switch" htmlFor="switch">
                 A-to-Z
             </label>
 
@@ -135,14 +251,14 @@ function TodoContainer({ tableName, baseName, apiKey }) {
                 id="switch"
                 type="checkbox"
                 checked={sortDirection}
-                onChange={() => sortDirection(!setSortDirection)} */}
-            {/* /> */}
-            {/* </header> */}
+                onChange={() => sortDirection(!setSortDirection)}
+            /> */}
+            </div>
         </>
 
 
     )
-    console.log(toggleSortDirection);
+    // console.log(toggleSortDirection);
 
 }
 
