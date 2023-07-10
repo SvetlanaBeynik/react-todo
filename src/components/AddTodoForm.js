@@ -1,6 +1,8 @@
 import React from 'react';
 import InputWithLabel from './InputWithLabel';
 import PropTypes from 'prop-types';
+import style from "./TodoListItem.module.css";
+import { BiPlus } from "react-icons/bi";
 
 function AddTodoForm({ onAddTodo }) {
     // function InputWithLabel({ onAddTodo }) {
@@ -15,27 +17,35 @@ function AddTodoForm({ onAddTodo }) {
     // };
 
     function handleAddTodo(event) {
+
         event.preventDefault();
-        onAddTodo({
-            title: todoTitle,
-            id: Date.now()
-        });
-
-        console.log(todoTitle);
-        setTodoTitle('')
-
+        if (todoTitle === "") {
+            return;
+        }
+        onAddTodo(todoTitle);
+        setTodoTitle("");
     }
+
 
     return (
         <form onSubmit={handleAddTodo}>
-            <InputWithLabel
-                id="todoTitle"
-                name="Title"
-                value={todoTitle}
-                todoTitle={todoTitle}
-                handleTitleChange={handleTitleChange}> </InputWithLabel>
+            <div className={style.inputGroupe}>
+                <InputWithLabel
+                    id="todoTitle"
+                    name="Title"
+                    value={todoTitle}
+                    todoTitle={todoTitle}
+                    handleTitleChange={handleTitleChange}> </InputWithLabel>
 
-            <button type="submit"> Add </button>
+                <button
+                    className={style.addButton}
+                    type="submit"
+                    aria-label="Add Todo Button"
+                >
+                    <BiPlus size={'2rem'} />
+
+                </button>
+            </div>
         </form>
     );
 
